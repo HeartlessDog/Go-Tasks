@@ -3,13 +3,15 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
 )
 
 func main() {
+	var wg sync.WaitGroup 
+    wg.Add(10)  
 	var once sync.Once
 	for i := 0; i < 10; i++ {
 		go func() {
+			defer wg.Done()
 			once.Do(
 				func() {
 					defer fmt.Println("World")
@@ -17,5 +19,5 @@ func main() {
 				})
 		}()
 	}
-	time.Sleep(100 * time.Millisecond)
+	wg.Wait() 
 }
